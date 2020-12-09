@@ -1,0 +1,87 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>姓名</td>
+            <td><input type="text" id="txtName" /></td>
+        </tr>
+        <tr>
+            <td>性别</td>
+            <td>
+                <input type="radio" name="Sex" value="False" />男
+                <input type="radio" name="Sex" value="True" />女
+            </td>
+        </tr>
+        <tr>
+            <td>年龄</td>
+            <td><input type="number" id="txtAge" /></td>
+        </tr>
+        <tr>
+            <td>班级</td>
+            <td>
+                  <select id="sel">
+                
+                  </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="button" value="添加" id="btnTJ"/></td>
+        </tr>
+    </table>
+</body>
+</html>
+<script>
+    $(function () {
+        LoadBanJi();
+    })
+    $("#btnTJ").click(function () {
+        var obj = {};
+        obj.StudentName = $("#txtName").val();
+        obj.StudentSex = $("[name=Sex]:checked").val();
+        obj.StudentAge = $("#txtAge").val();
+        obj.BId = $("#sel").val();
+        $.ajax({
+            url: "/My/Add",
+            data: obj,
+            type: "post",
+            dataType: "json",
+            success: function (d) {
+                if (d > 0) {
+                    alert('添加成功');
+                    location.href = '/My/Index';
+                } else {
+                    alert('添加失败');
+                }
+            }
+        })
+    })
+    function LoadBanJi() {
+        $.ajax({
+            url: "/My/GetBanJi",
+            data: {},
+            type: "post",
+            dataType: "json",
+            success: function (d) {
+                $("#sel").empty();
+                var str = "<option value='0'>请选择</option>";
+                $("#sel").append(str);
+                $(d).each(function () {
+                    var str1 = "<option value='" + this.BId + "'>" + this.BName + "</option>";
+                    $("#sel").append(str1);
+                })
+            }
+        })
+    }
+</script>

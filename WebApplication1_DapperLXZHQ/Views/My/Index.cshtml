@@ -1,0 +1,80 @@
+﻿@using Model;
+@model List<Studnet>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <input type="button" value="添加" onclick="tz()"/>
+    <table>
+        <tr>
+            <td>编号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>年龄</td>
+            <td>班级</td>
+            <td>操作</td>
+        </tr>
+        <tbody id="tb">
+
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    $(function () {
+        init();
+    });
+    function tz() {
+        location.href = '/My/Add';
+    }
+    function init() {
+        $.ajax({
+            url: "/My/Index1",
+            data: {},
+            type: "post",
+            dataType: "json",
+            success: function (d) {
+                $(d).each(function () {
+                    var str = "<tr>" +
+                        "<td>" + this.StudentId + "</td>" +
+                        "<td>" + this.StudentName + "</td>" +
+                        "<td>" + this.StudentSex + "</td>" +
+                        "<td>" + this.StudentAge + "</td>" +
+                        "<td>" + this.BId + "</td>" +
+                        "<td><input type='button' value='删除' onclick='btnSC(" + this.StudentId+ ")'/></td>" +
+                        "</tr>";
+                    $("#tb").append(str);
+                })
+              
+            }
+        })
+    }
+    function btnSC(id) {
+        if (confirm('确认删除吗?')) {
+            $.ajax({
+                url: "/My/Remove",
+                data: { id: id },
+                type: "post",
+                dataType: "json",
+                success: function (d) {
+                    if (d > 0) {
+                        alert('删除成功');
+                        location.href = '/My/Index';
+                    } else {
+                        alert('删除失败');
+                    }
+                }
+            })
+        }
+      
+    }
+</script>
